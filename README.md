@@ -175,7 +175,7 @@ You can use the [`gen-compact-form.js`](./tools/gen-compact-form.js) to generate
 the compact form of the JSON for the quota alerts. 
 
 To use it, write a text file with the json you want, then invoke the script and
-pass that file. The script just reads the JSON then serializes it with minimal
+pass that file. The script just reads the JSON then re-serializes as JSON it with minimal
 spacing.
 
 Example:
@@ -200,8 +200,8 @@ may receive 7 requests in a row, while the other MP receives the next 3.
 
 The result is that any one MP will in general have an out-of-date view of the
 state of the quota consumption. Periodically the MPs synchronize and reconcile
-their counts, and this happens transparently from the point of view of the API
-proxy developer. But it still occurs. As a result, one can see the phenomenon of
+their counts.  While this is mostly transparent from the point of view of the API
+proxy developer, it is possible to observe the phenomenon of
 discontinous quota counts. To illustrate, this is data taken from an actual series
 of single-threaded requests:
 
@@ -238,7 +238,6 @@ threshold has been breached. Unlike sending an email, setting the flag is an
 idempotent operation - it does not matter how many times the flag is set. Then,
 later, a check can run, to examine which thresholds have been breached, and can
 then send the notifications out.
-
 
 
 ## Remaining To do: 

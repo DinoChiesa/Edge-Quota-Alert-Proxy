@@ -6,7 +6,7 @@
 # A bash script for provisioning an API Product and a developer app on
 # an organization in the Apigee Edge Gateway.
 #
-# Last saved: <2016-November-08 11:11:38>
+# Last saved: <2016-November-08 15:13:12>
 #
 
 verbosity=2
@@ -79,6 +79,19 @@ function CleanUp() {
 }
 
 function echoerror() { echo "$@" 1>&2; }
+
+
+# echo 1 if global command line program installed, else 0
+#
+# usage example: "$(program_is_installed node)"
+function program_is_installed {
+  # set to 1 initially
+  local return_=1
+  # set to 0 if not found
+  type $1 >/dev/null 2>&1 || { local return_=0; }
+  # return value
+  echo "$return_"
+}
 
 function choose_mgmtserver() {
   local name
@@ -697,15 +710,31 @@ while getopts "hm:o:e:u:ndrt:qv" opt; do
 done
 
 
-echo
-if [[ ! -f "$thresholdFile" && $resetonly -ne 0 ]] ; then
-    echo "You must specify a configuration file (JSON format) with threshold information."
-    echo
-    usage
-    exit 1
+[[ $verbosity -gt 0 ]] && echo
+if [[ $resetonly -ne 0 ]] ; then
+    if [[ ! -f "$thresholdFile" ]] ; then 
+        echoerror "You must specify a configuration file (JSON format) with threshold information."
+        echo
+        usage
+        exit 1
+    fi
+    hasnode=$(program_is_installed node)
+    if [[ $hasnode -ne 1 ]] ; then
+        echoerror "This script depends on node. Please install node, and re-run."
+        echo
+        usage
+        exit 1 
+    fi 
+    hascurl=$(program_is_installed curl)
+    if [[ $hascurl -ne 1 ]] ; then
+        echoerror "This script depends on curl. Please install curl, and re-run."
+        echo
+        usage
+        exit 1 
+    fi 
 fi
 
-echo
+[[ $verbosity -gt 0 ]] && echo
 if [[ "X$mgmtserver" = "X" ]]; then
   mgmtserver="$defaultmgmtserver"
 fi 

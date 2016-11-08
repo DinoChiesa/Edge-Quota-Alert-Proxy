@@ -108,7 +108,7 @@ In more detail, here's how the first proxy works:
      ought to expire at ... say... midnight, after the job has been run.
       
 
-## The Email Sending Proxy
+## The Email Sending (Alert processing) Proxy
 
 Asynchronously, a cron job will invoke a "send alerts" proxy periodically; for example, once each day at 
 10pm. The cron job will retrieve all client_ids, and post then
@@ -133,6 +133,7 @@ To use this, you must create an API Product and set a custom attribute, named
 
 The configuration looks like this:
 
+```json
 [{
   "threshold": 65,
   "message": "Dear {developer.firstname} {developer.lastname}, on {system.time}, your app, {developer.app.name}, reached {quota_usage_pct}% of the alotted quota. Sincerely, The Mgmt.",
@@ -153,6 +154,7 @@ The configuration looks like this:
   "cc" : "Dino@apigee.com",
   "from": "DChiesa@apigee.com"
 }]
+```
 
 Each item in the array is an object with a "threshold" property which is an
 integer, and a set of other string properties, which can have any name. The
@@ -241,4 +243,5 @@ then send the notifications out.
 
 ## Remaining To do: 
 
-Actually send emails.  This should be not too difficult using a nodejs smtp module. 
+* Actually send emails.  This should be not too difficult using a nodejs smtp module.
+* Modify to emit webhooks (eg, slack notification)

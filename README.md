@@ -15,7 +15,7 @@ shows how.
    send alerts when configured thresholds are exceeded.
    
  - because the proxies run in a distributed environment, there's a race
-   condition, around detecting thresholds and sending emails. One MP may
+   condition, around detecting thresholds and sending emails. (for more on that, see [here](#discontinuity-in-quota-accounting)).  One MP may
    see a threshold exceeded, while another does not. Therefore proxies
    must not send emails directly. Instead they set a flag when a threshold is
    reached. This is an idempotent operation.
@@ -49,7 +49,6 @@ you can re-run it with the -r option.
   ./tools/provisionQuotaAlert.sh -o ORGNAME -e ENVNAME -r
   
 ```
-
 
 
 ## How It Works
@@ -183,6 +182,61 @@ Example:
     tools/gen-compact-form.js my-threshold-config.json
     
 ```
+
+## Discontinuity in Quota Accounting
+
+In Apigee Edge, there will be multiple distributed processes enforcing a quota. In
+most cases, the synchronization between these processes is periodic, and out of
+band with respect to the requests being processed.
+
+In more detail, let's call each process that enforces a quota a Message Processor,
+and suppose there are two, MP1 and MP2. Now, let's suppose there is a
+load-distributor in front of those MPs such that in general they share an equal
+proportion of the load, 50/50.  But, for a small sample of requests (~100), there
+may be an unequal distribution of load, say 60/40 or even more unbalanced. Also, one MP
+may receive 7 requests in a row, while the other MP receives the next 3.
+
+The result is that any one MP will in general have an out-of-date view of the
+state of the quota consumption. Periodically the MPs synchronize and reconcile
+their counts, and this happens transparently from the point of view of the API
+proxy developer. But it still occurs. As a result, one can see the phenomenon of
+discontinous quota counts. To illustrate, this is data taken from an actual series
+of single-threaded requests:
+
+```
+Request 1 - served by MP 1
+  quota consumed: 32
+  quota remaining: 48
+
+Request 2 - served by MP 2
+  quota consumed: 40
+  quota remaining: 40
+
+Request 3 - served by MP 2
+  quota consumed: 43
+  quota remaining: 37
+  
+Request 4 - served by MP 1
+  quota consumed: 43
+  quota remaining: 37
+```
+
+With this discontinuity, it is not possible to use a simple "equals" test within
+an MP to see if a quota threshold has been breached. In the above example, the
+consumed count will never have been viewed as being 42, in any MP, at any point.
+It jumps from 32 to 45 in one MP, and from 40 to 43 in the other.
+
+A greater-than-or-equals test is necessary, keeping in mind that this test will
+evaluate to true in multiple MPs for each threshold. Therefore the email cannot be
+sent out synchronously with respect to the request being handled.
+
+Instead, the better approach is to have each MP set a flag indicating that a
+threshold has been breached. Unlike sending an email, setting the flag is an
+idempotent operation - it does not matter how many times the flag is set. Then,
+later, a check can run, to examine which thresholds have been breached, and can
+then send the notifications out.
+
+
 
 ## Remaining To do: 
 

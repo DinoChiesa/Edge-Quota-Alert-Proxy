@@ -1,0 +1,19 @@
+<PopulateCache name='PC-AlertPending'>
+  <CacheResource>cache1</CacheResource>
+  <Source>alert_alert</Source> <!-- name of flow variable -->
+  <Scope>Application</Scope>
+  <CacheKey>
+    <Prefix/>
+    <KeyFragment>alertpending</KeyFragment>
+    <KeyFragment ref='client_id'/>
+    <KeyFragment ref='highest_threshold_reached'/>
+  </CacheKey>
+  <ExpirySettings>
+    <TimeoutInSec ref="quota_alert_expiresin"/>
+    <!--
+        TimeOfDay is expressed as a local time, which varies in a distributed scenario.
+        Therefore not suitable here.
+        <TimeOfDay>2:30:00</TimeOfDay>
+    -->
+  </ExpirySettings>
+</PopulateCache>

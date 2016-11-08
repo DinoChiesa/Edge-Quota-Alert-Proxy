@@ -1,0 +1,20 @@
+[{
+  "threshold": 65,
+  "message": "Dear {developer.firstname} {developer.lastname}, on {system.time}, your app, {developer.app.name}, reached {quota_usage_pct}% of the allotted quota. Sincerely, The Mgmt.",
+  "subject": "API usage alert for {developer.app.name}",
+  "sendto": "{developer.email}",
+  "from": "DChiesa@apigee.com"
+}, {
+  "threshold": 85,
+  "message": "Dear {developer.firstname} {developer.lastname}, on {system.time}, your app, {developer.app.name}, reached {quota_usage_pct}% of the allotted quota. You really should look into this.",
+  "subject": "API usage alert for {developer.app.name}",
+  "sendto": "{developer.email}",
+  "from": "DChiesa@apigee.com"
+}, {
+  "threshold": 95,
+  "message": "Dear {developer.firstname} {developer.lastname}, on {system.time}, your app, {developer.app.name}, reached {quota_usage_pct}% of the allotted quota. THE END IS NEAR!",
+  "subject": "API usage alert for {developer.app.name}",
+  "sendto": "{developer.email}",
+  "cc" : "Dino@apigee.com",
+  "from": "DChiesa@apigee.com"
+}]

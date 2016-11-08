@@ -1,0 +1,10 @@
+<Javascript name='JS-CheckThreshold'>
+  <Properties>
+    <Property name='quota-policy-name'>Quota-1</Property>
+    <Property name='threshold-alert-info'>verifyapikey.VerifyApiKey-1.apiproduct.quota_alerts_info</Property>
+    <Property name='threshold-var'>highest_threshold_reached</Property>
+    <Property name='cache-expiry-hours-after-midnight'>9</Property>
+  </Properties>
+  <DisplayName>JS-CheckThreshold</DisplayName>
+  <ResourceURL>jsc://checkThreshold.js</ResourceURL>
+</Javascript>

@@ -1,0 +1,10 @@
+<APIProxy revision='1' name='quota-alert'>
+  <ConfigurationVersion minorVersion='0' majorVersion='4'/>
+  <CreatedAt>1399389135604</CreatedAt>
+  <CreatedBy>dino</CreatedBy>
+  <Description></Description>
+  <DisplayName>quota-alert</DisplayName>
+  <LastModifiedAt>1478626047602</LastModifiedAt>
+  <LastModifiedBy>orgAdmin</LastModifiedBy>
+  <TargetEndpoints/>
+</APIProxy>

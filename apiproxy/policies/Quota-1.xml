@@ -1,0 +1,16 @@
+<Quota name='Quota-1' type='calendar'>
+  <Identifier ref='client_id' />
+
+  <!-- the count specified is used unless overridden by the variable referenced here -->
+  <Allow countRef='verifyapikey.VerifyApiKey-1.apiproduct.developer.quota.limit' count='100'/>
+  <!-- use the interval in the variable; if not present use the value specified here. -->
+  <Interval ref='verifyapikey.VerifyApiKey-1.apiproduct.developer.quota.interval'>1</Interval>
+  <!-- use the timeunit provided in the variable; if not present use the value specified here. -->
+  <TimeUnit ref='verifyapikey.VerifyApiKey-1.apiproduct.developer.quota.timeunit'>hour</TimeUnit>
+
+  <StartTime>2016-09-15 17:00:00</StartTime>
+
+  <Distributed>true</Distributed>
+  <Synchronous>false</Synchronous>
+  <PreciseAtSecondsLevel>false</PreciseAtSecondsLevel>
+</Quota>

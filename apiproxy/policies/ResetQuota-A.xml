@@ -1,0 +1,7 @@
+<ResetQuota name="ResetQuota-A">
+   <Quota name="Quota-1">
+      <Identifier ref="request.header.apikey">
+         <Allow ref='request.formparam.credit'>10</Allow>
+      </Identifier>
+   </Quota>
+</ResetQuota>

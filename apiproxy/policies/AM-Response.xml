@@ -1,0 +1,58 @@
+<AssignMessage name='AM-Response'>
+  <DisplayName>AM-Response</DisplayName>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <Remove>
+    <Headers>
+      <Header name='Accept'/>
+      <Header name='user-agent'/>
+      <Header name='Host'/>
+      <Header name='x-forwarded-for'/>
+      <Header name='X-Forwarded-Proto'/>
+      <Header name='X-Forwarded-Port'/>
+      <Header name='apikey'/>
+      <Header name='date'/>
+      <Header name='Authorization'/>
+      <Header name='Signature'/>
+      <Header name='X-Powered-By'/>
+    </Headers>
+  </Remove>
+  <Set>
+    <Headers>
+      <Header name='Quota-Remaining'>{ratelimit.Quota-1.available.count}</Header>
+      <Header name='Quota-Allowed'>{ratelimit.Quota-1.allowed.count}</Header>
+    </Headers>
+    <Payload contentType='application/json'
+             variablePrefix='%' variableSuffix='#'><![CDATA[{
+  "response" : {
+    "keyVerificationVariables" : {
+      "interval" : "%verifyapikey.VerifyApiKey-1.apiproduct.developer.quota.interval#",
+      "limit" : "%verifyapikey.VerifyApiKey-1.apiproduct.developer.quota.limit#",
+      "timeunit" : "%verifyapikey.VerifyApiKey-1.apiproduct.developer.quota.timeunit#"
+    },
+    "quotaVariables" : {
+      "allowed.count" : %ratelimit.Quota-1.allowed.count#,
+      "used.count" : %ratelimit.Quota-1.used.count#,
+      "available.count" : %ratelimit.Quota-1.available.count#,
+      "exceed.count" : %ratelimit.Quota-1.exceed.count#,
+      "total.exceed.count" : %ratelimit.Quota-1.total.exceed.count#,
+      "expiry.time" : %ratelimit.Quota-1.expiry.time#,
+      "identifier" : "%ratelimit.Quota-1.identifier#",
+    },
+    "timestamp" : %system.timestamp#,
+    "system" : "%system.uuid#",
+    "usage_pct" : %quota_usage_pct#,
+    "alert_expiresin" : "%quota_alert_expiresin#",
+    "quota_expiresin" : "%quota_expiresin#",
+    "highest_threshold_reached" : "%highest_threshold_reached#",
+    "developerEmail" : "%developer.email#",
+    "developerAppName" : "%developer.app.name#",
+    "status" : "OK",
+    "apikey" : "%request.header.apikey#"
+  }
+}
+]]></Payload>
+    <StatusCode>200</StatusCode>
+    <ReasonPhrase>OK</ReasonPhrase>
+  </Set>
+
+</AssignMessage>

@@ -1,0 +1,8 @@
+<Javascript name='JS-PrepAlert'>
+  <Properties>
+    <Property name='threshold-var'>highest_threshold_reached</Property>
+    <Property name='threshold-alert-info'>verifyapikey.VerifyApiKey-1.apiproduct.quota_alerts_info</Property>
+  </Properties>
+  <DisplayName>JS-PrepAlert</DisplayName>
+  <ResourceURL>jsc://prepAlert.js</ResourceURL>
+</Javascript>

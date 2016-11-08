@@ -1,0 +1,18 @@
+<RaiseFault name='RaiseFault-UnknownRequest'>
+  <DisplayName>RaiseFault-UnknownRequest</DisplayName>
+  <Description></Description>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <FaultResponse>
+    <Set>
+      <Payload contentType='application/json'
+               variablePrefix='%' variableSuffix='#'><![CDATA[{
+  "response" : {
+    "message" : "that request was unknown"
+  }
+}
+]]></Payload>
+      <StatusCode></StatusCode>
+      <ReasonPhrase></ReasonPhrase>
+    </Set>
+  </FaultResponse>
+</RaiseFault>

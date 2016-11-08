@@ -1,0 +1,12 @@
+<ExtractVariables name='Extract-1'>
+  <Source>AccessEntity.AE-Developer</Source>
+  <VariablePrefix>developer</VariablePrefix>
+  <XMLPayload>
+    <Variable name='firstname' type='string'>
+      <XPath>/Developer/FirstName/text()</XPath>
+    </Variable>
+    <Variable name='lastname' type='string'>
+      <XPath>/Developer/LastName/text()</XPath>
+    </Variable>
+  </XMLPayload>
+</ExtractVariables>

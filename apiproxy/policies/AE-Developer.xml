@@ -1,0 +1,8 @@
+<AccessEntity name='AE-Developer'>
+  <EntityType value='developer' />
+  <EntityIdentifier type='developerid' ref='developer.id' />
+<!--
+  The result is stored in a variable:  AccessEntity.AE-Developer
+  Retrieve information via a subsequent ExtractVariables policy.
+-->
+</AccessEntity>

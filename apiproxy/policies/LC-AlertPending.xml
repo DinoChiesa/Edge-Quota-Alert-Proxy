@@ -1,0 +1,11 @@
+<LookupCache name='LC-AlertPending'>
+  <CacheResource>cache1</CacheResource>
+  <AssignTo>quota_alert_pending</AssignTo> <!-- name of flow variable -->
+  <Scope>Application</Scope>
+  <CacheKey>
+    <Prefix/>
+    <KeyFragment>alertpending</KeyFragment>
+    <KeyFragment ref='client_id'/>
+    <KeyFragment ref='highest_threshold_reached'/>
+  </CacheKey>
+</LookupCache>

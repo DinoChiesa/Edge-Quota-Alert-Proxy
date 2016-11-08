@@ -1,0 +1,127 @@
+<ProxyEndpoint name='default'>
+  <Description>Default Proxy</Description>
+  <HTTPProxyConnection>
+    <BasePath>/quota-alert</BasePath>
+    <Properties/>
+    <VirtualHost>default</VirtualHost>
+    <VirtualHost>secure</VirtualHost>
+  </HTTPProxyConnection>
+
+  <FaultRules/>
+
+  <PreFlow name="PreFlow">
+      <Request/>
+      <Response/>
+  </PreFlow>
+  <PostFlow name="PostFlow">
+      <Request/>
+      <Response/>
+  </PostFlow>
+
+  <Flows>
+    <Flow name='test'>
+      <Description>test 1</Description>
+      <Request>
+        <Step><Name>VerifyApiKey-1</Name></Step>
+        <Step><Name>Quota-1</Name></Step>
+
+        <!-- The following section is for conditional threshold alerting.
+
+             The quota alert configuration is assumed to be stored in a custom attribute
+             on the API product called "quota_alerts_info"
+
+             If desired, this information could also be stored in the KVM.
+        -->
+
+        <!-- Check if this request has exceeded a configured threshold on the quota. -->
+        <Step>
+          <Name>JS-CheckThreshold</Name>
+        </Step>
+
+        <!-- Check if there is a pending (cached) alert for this threshold -->
+        <Step>
+          <Name>LC-AlertPending</Name>
+          <Condition>highest_threshold_reached != null</Condition>
+        </Step>
+
+        <!-- Cache miss; need to create the alert. get the developer info. -->
+        <Step>
+          <Name>AE-Developer</Name>
+          <Condition>(highest_threshold_reached != null) AND (quota_alert_pending == null)</Condition>
+        </Step>
+        <!-- Extract the developer {first,last}name to variables; these will be used in the alert email. -->
+        <Step>
+          <Name>Extract-1</Name>
+          <Condition>(highest_threshold_reached != null) AND (quota_alert_pending == null)</Condition>
+        </Step>
+
+        <!-- Expand the templates for the alert for the currently exceeded threshold -->
+        <Step>
+          <Name>JS-PrepAlert</Name>
+          <Condition>(highest_threshold_reached != null) AND (quota_alert_pending == null)</Condition>
+        </Step>
+
+        <!-- Populate the cache with the expanded templates; it's ok to do this multiple times. -->
+        <Step>
+          <Name>PC-AlertPending</Name>
+          <Condition>(highest_threshold_reached != null) AND (quota_alert_pending == null)</Condition>
+        </Step>
+
+        <!-- At this point, no alert has been sent.  This happens later, asynchronously w.r.t. this request -->
+      </Request>
+
+      <Response>
+        <Step><Name>AM-Response</Name></Step>
+      </Response>
+
+      <Condition>(proxy.pathsuffix MatchesPath "/r1") and (request.verb = "GET")</Condition>
+    </Flow>
+
+    <Flow name='reset'>
+      <Request>
+        <Step><Name>VerifyApiKey-1</Name></Step>
+        <Step><Name>ResetQuota-A</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-Response</Name></Step>
+      </Response>
+
+      <Condition>(proxy.pathsuffix MatchesPath "/reset") and (request.verb = "POST")</Condition>
+    </Flow>
+
+
+    <Flow name='check'>
+      <!-- might want this in a separate proxy endpoint... -->
+      <!-- payload is expected to be application/json:  { "apikeys": ["apikey1", ...]} -->
+      <Request>
+        <!-- Use this VerifyApiKey step to slurp in the custom attr on the API product.
+             The context variable will be used by the nodejs logic to get the configured
+             thresholds. Then the nodejs will look for a cache entry for each threshold,
+             and if one is found, then it can send out an email.
+        -->
+        <Step><Name>VerifyApiKey-1</Name></Step>
+      </Request>
+
+      <Response>
+      </Response>
+
+      <Condition>(proxy.pathsuffix MatchesPath "/check") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='unknown request'>
+      <Request>
+        <Step><Name>RaiseFault-UnknownRequest</Name></Step>
+      </Request>
+      <Response/>
+    </Flow>
+
+  </Flows>
+
+  <RouteRule name='CheckAlerts-rule'>
+    <TargetEndpoint>CheckAlerts</TargetEndpoint>
+    <Condition>(proxy.pathsuffix MatchesPath "/check") and (request.verb = "POST")</Condition>
+  </RouteRule>
+
+  <RouteRule name='NoRoute'/>
+
+</ProxyEndpoint>

@@ -224,7 +224,8 @@ Request 4 - served by MP 1
 With this discontinuity, it is not possible to use a simple "equals" test within
 an MP to see if a quota threshold has been breached. In the above example, the
 consumed count will never have been viewed as being 42, in any MP, at any point.
-It jumps from 32 to 45 in one MP, and from 40 to 43 in the other.
+It jumps from 32 to 43 in one MP, and from 40 to 43 in the other. At higher
+concurrency and with more MPs, the problem is exacerbated.
 
 A greater-than-or-equals test is necessary, keeping in mind that this test will
 evaluate to true in multiple MPs for each threshold. Therefore the email cannot be

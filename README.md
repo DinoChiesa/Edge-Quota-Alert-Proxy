@@ -3,6 +3,12 @@
 This Edge proxy bundle demonstrates how to generate the appropriate alert emails
 when a developer app (==apikey) reaches configurable thresholds.
 
+Today, in Apigee Edge, there is no built-in way to have Edge alert someone (a
+developer, an API owner, etc) if and when a Quota is exceeded.  There's no
+built-in way to alert someone when the consumption of a particular Quota reaches a
+certain threshold.  But some customers want to send out such alerts. This example
+shows how.
+
 ## The basic idea 
 
  - each proxy should check for quota thresholds, and make it possible to

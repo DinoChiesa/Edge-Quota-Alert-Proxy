@@ -6,7 +6,7 @@
 # A bash script for provisioning an API Product and a developer app on
 # an organization in the Apigee Edge Gateway.
 #
-# Last saved: <2016-November-08 15:13:12>
+# Last saved: <2016-November-09 11:44:09>
 #
 
 verbosity=2
@@ -250,22 +250,22 @@ function clear_env_state() {
   for i in "${!devarray[@]}"; do
     dev=${devarray[i]}
     if [[ "$dev" =~ ^${apiname}.+$ ]] ; then
-      [[ $verbosity -gt 0 ]] && echo "  found a matching developer..."
-      [[ $verbosity -gt 0 ]] && echo "  list the apps for that developer..."
+      [[ $verbosity -gt 0 ]] && echo "found a matching developer..."
+      [[ $verbosity -gt 0 ]] && echo "list the apps for that developer..."
       MYCURL -X GET "${mgmtserver}/v1/o/${orgname}/developers/${dev}/apps"
       apparray=(`cat ${CURL_OUT} | grep "\[" | sed -E 's/[]",[]//g'`)
       for j in "${!apparray[@]}" ; do
         app=${apparray[j]}
-        echo "  delete the app ${app}..."
+        echo "delete the app ${app}..."
         MYCURL -X DELETE "${mgmtserver}/v1/o/${orgname}/developers/${dev}/apps/${app}"
         ## ignore errors
       done       
 
-      echo "  delete the developer $dev..."
+      echo "delete the developer $dev..."
       MYCURL -X DELETE "${mgmtserver}/v1/o/${orgname}/developers/${dev}"
       if [[ ${CURL_RC} -ne 200 ]]; then
         echo 
-        echoerror "  could not delete that developer (${dev})"
+        echoerror "could not delete that developer (${dev})"
         echo
         CleanUp
         exit 1
@@ -291,7 +291,7 @@ function clear_env_state() {
        MYCURL -X DELETE ${mgmtserver}/v1/o/${orgname}/apiproducts/${prod}
        if [[ ${CURL_RC} -ne 200 ]]; then
          echo 
-         echoerror "  could not delete that product (${prod})"
+         echoerror "could not delete that product (${prod})"
          echo 
          CleanUp
          exit 1
@@ -711,7 +711,7 @@ done
 
 
 [[ $verbosity -gt 0 ]] && echo
-if [[ $resetonly -ne 0 ]] ; then
+if [[ $resetonly -eq 0 ]] ; then
     if [[ ! -f "$thresholdFile" ]] ; then 
         echoerror "You must specify a configuration file (JSON format) with threshold information."
         echo
